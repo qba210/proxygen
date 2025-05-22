@@ -69,7 +69,7 @@ impl From<syn::Meta> for ProxySignatureType {
 //
 // Note: You may not have any instructions in the function body when forwarding function calls
 #[proc_macro_attribute]
-pub fn forward(_attr_input: TokenStream, item: TokenStream) -> TokenStream {
+pub unsafe fn forward(_attr_input: TokenStream, item: TokenStream) -> TokenStream {
     let input: ItemFn = syn::parse(item).expect("You may only proxy a function");
     let func_name = input.sig.clone().ident;
     let func_body = input.block.stmts.clone();
@@ -145,7 +145,7 @@ pub fn forward(_attr_input: TokenStream, item: TokenStream) -> TokenStream {
 
 // Proc macro to bring the original function into the scope of an interceptor function as `orig_func`
 #[proc_macro_attribute]
-pub fn proxy(attr_input: TokenStream, item: TokenStream) -> TokenStream {
+pub unsafe fn proxy(attr_input: TokenStream, item: TokenStream) -> TokenStream {
     let input: ItemFn = syn::parse(item).expect("You may only proxy a function");
     let attr_input = syn::parse::<syn::Meta>(attr_input);
     let func_name = input.sig.clone().ident;
@@ -188,7 +188,7 @@ pub fn proxy(attr_input: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// Note: Returning in this function will skip running the original.
 #[proc_macro_attribute]
-pub fn pre_hook(attr_input: TokenStream, item: TokenStream) -> TokenStream {
+pub unsafe fn pre_hook(attr_input: TokenStream, item: TokenStream) -> TokenStream {
     let input: ItemFn = syn::parse(item).expect("You may only proxy a function");
     let attr_input = syn::parse::<syn::Meta>(attr_input);
     let func_name = input.sig.ident.clone();
@@ -349,7 +349,7 @@ pub fn pre_hook(attr_input: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// Note: `orig_result` will be returned unless you choose to return your own result from this function.
 #[proc_macro_attribute]
-pub fn post_hook(attr_input: TokenStream, item: TokenStream) -> TokenStream {
+pub unsafe fn post_hook(attr_input: TokenStream, item: TokenStream) -> TokenStream {
     let input: ItemFn = syn::parse(item).expect("You may only proxy a function");
     let attr_input = syn::parse::<syn::Meta>(attr_input);
     let func_name = input.sig.clone().ident;
