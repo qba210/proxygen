@@ -103,7 +103,7 @@ impl ProxyTemplates {
             .filter(|x| !exclusions.contains(&x.cleaned))
             .map(|export_name| {
                 format!(
-                    "#[forward]\n#[export_name=\"{1}\"]\npub extern \"C\" fn {0}() {{}}\n",
+                    "#[forward]\n#[unsafe(export_name=\"{1}\")]\npub extern \"C\" fn {0}() {{}}\n",
                     export_name.cleaned, export_name.original
                 )
             })

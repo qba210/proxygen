@@ -70,7 +70,6 @@ impl From<syn::Meta> for ProxySignatureType {
 // Note: You may not have any instructions in the function body when forwarding function calls
 #[proc_macro_attribute]
 pub fn forward(_attr_input: TokenStream, item: TokenStream) -> TokenStream {
-    unsafe{
     let input: ItemFn = syn::parse(item).expect("You may only proxy a function");
     let func_name = input.sig.clone().ident;
     let func_body = input.block.stmts.clone();
@@ -108,7 +107,7 @@ pub fn forward(_attr_input: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     TokenStream::from(quote!(
-        #[naked]
+        #[unsafe(naked)]
         #(#attrs)*
         pub unsafe extern "C" fn #func_name() {
             #[cfg(target_arch = "x86_64")]
@@ -142,7 +141,6 @@ pub fn forward(_attr_input: TokenStream, item: TokenStream) -> TokenStream {
             }
         }
     ))
-    }
 }
 
 // Proc macro to bring the original function into the scope of an interceptor function as `orig_func`
@@ -249,7 +247,7 @@ pub fn pre_hook(attr_input: TokenStream, item: TokenStream) -> TokenStream {
                     #(#func_body)*
                 }
 
-                #[naked]
+                #[unsafe(naked)]
                 #(#attrs)*
                 pub unsafe extern "C" fn #func_name() {
                     #[cfg(target_arch = "x86")]

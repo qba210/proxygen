@@ -6,7 +6,7 @@ default-members = ["proxygen", "proxygen-macros"]
 [workspace.package]
 authors = ["Warren Hood <nullbyte001@gmail.com>"]
 version = "0.5.1"
-edition = "2021"
+edition = "2024"
 description = "A DLL proxy generator written in Rust"
 license = "MIT"
 repository = "https://github.com/WarrenHood/proxygen/"
